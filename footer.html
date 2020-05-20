@@ -1,0 +1,51 @@
+<div class="bg-rust px-12 py-6 bg-atomDark text-white" style="margin: 20px -15px -20px 185px;">
+  <div>
+    <p class="font-slab text-5xl m-0">finch-gen</p>
+  </div>
+
+  <div>
+    <p class="font-fira text-lg m-0">Copyright &copy; 2020 Zachary Vacura</p>
+  </div>
+</div>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (e) => {
+    fetch('/reference/data.json')
+      .then((x) => x.json())
+      .then((data) => {
+        const crates = document.getElementById('crate');
+        crates.addEventListener('input', (e) => {
+          location.href = `/reference/${crates.value}`;
+        });
+
+        const versions = document.getElementById('version');
+        versions.addEventListener('input', (e) => {
+          location.href = `/reference/${crates.value}/${versions.value}`;
+        });
+
+        for (const crate of Object.keys(data).sort()) {
+          const elem = document.createElement('option');
+          elem.value = crate;
+          elem.text = crate;
+
+          crates.add(elem);
+
+          if (location.pathname.split('/')[2] === crate) {
+            crates.value = crate;
+
+            for (const version of data[crate].sort()) {
+              const elem = document.createElement('option');
+              elem.value = version;
+              elem.text = version;
+
+              versions.add(elem);
+
+              if (location.pathname.split('/')[3] == version) {
+                versions.value = version;
+              }
+            }
+          }
+        }
+      });
+  });
+</script>
